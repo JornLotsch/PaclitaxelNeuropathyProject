@@ -164,6 +164,8 @@ quantile(unlist(lapply(lapply(ClusterQuality, "[[", "DunnIndex"), "[[", 1)), pro
 quantile(unlist(lapply(lapply(ClusterQuality, "[[", "DaviesBouldinIndex"), "[[", 1)), probs = c(0.025, 0.5, 0.975), na.rm = T)
 
 ########## U matrix #############################################
+pfad_umx <- "/08AnalyseProgramme/PaclitaxelNeuropathyProject/R"
+
 library(Umatrix)
 Cls_Umx <- paclitaxel_uct_imputed$Neuropathie
 Cls_Umx[is.na(Cls_Umx)] <- 3
@@ -172,17 +174,17 @@ Cls_Umx[is.na(Cls_Umx)] <- 3
 # WriteUMX(FileName = "Lipids_Umx.umx", UMatrix = Lipids_Umx$Umatrix)
 # WriteWTS(FileName = "Lipids_Umx.wts", wts = Lipids_Umx$Weights)
 
-BestMatches = ReadBM("Lipids_Umx.bm")
-UMatrix = ReadUMX("Lipids_Umx.umx")
-Weigths <- ReadWTS("Lipids_Umx.wts")
+BestMatches = ReadBM(FileName = "Lipids_Umx.bm", InDirectory = paste0(pfad_o, pfad_umx))
+UMatrix = ReadUMX(FileName = "Lipids_Umx.umx", InDirectory = paste0(pfad_o, pfad_umx))
+Weigths <- ReadWTS(FileName = "Lipids_Umx.wts", InDirectory = paste0(pfad_o, pfad_umx))
 
 # Lipids_Imx <- Umatrix::iUmapIsland(Umatrix = UMatrix, BestMatches = BestMatches$BestMatches, Cls = Cls_Umx)
 # WriteIMX("Lipids_Imx.imx", Lipids_Imx$Imx)
-Imx <- ReadIMX("Lipids_Imx.imx")
+Imx <- ReadIMX("Lipids_Imx.imx", InDirectory = paste0(pfad_o, pfad_umx))
 
 # Lipids_Cls <- Umatrix::iClassification(Umatrix = UMatrix, BestMatches = BestMatches$BestMatches, Cls = Cls_Umx, Imx = Imx)
 # WriteCLS("Lipids_Cls.cls", Lipids_Cls$Cls)
-Lipids_ClsUmx <- ReadCLS("Lipids_Cls.cls")
+Lipids_ClsUmx <- ReadCLS("Lipids_Cls.cls", InDirectory = paste0(pfad_o, pfad_umx))
 Lipids_ClsUmx$Cls[Lipids_ClsUmx$Cls > 1] <- 2
 table(Lipids_ClsUmx$Cls)
 
@@ -202,4 +204,3 @@ fisher.test(table(Lipids_ClsUmx$Cls, silclust))
 #                            Neuropaty = paclitaxel_uct_imputed_log$Neuropathie,
 #                            Clusters = silclust), "dfLipids_Classes.csv")
 # write.csv(rownames(paclitaxel_uct_imputed_log), "Index.csv")
-                           
