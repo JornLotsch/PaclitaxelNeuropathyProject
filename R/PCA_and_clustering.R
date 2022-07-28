@@ -16,8 +16,8 @@ library(ggmosaic)
 # Compute PCA
 Lipids.pca <- FactoMineR::PCA(dfLipids, graph = F, ncp = 255)
 screeLipids <- fviz_screeplot(Lipids.pca,
-                              choice = "eigenvalue", ncp = sum(Lipids.pca$eig[, 1] > 1) + 5, addlabels = F, ylim = c(0, 65),
-                              barcolor = "lemonchiffon4", barfill = "lemonchiffon3"
+  choice = "eigenvalue", ncp = sum(Lipids.pca$eig[, 1] > 1) + 5, addlabels = F, ylim = c(0, 65),
+  barcolor = "lemonchiffon4", barfill = "lemonchiffon3"
 )
 Lipids.pca$eig
 
@@ -27,9 +27,9 @@ screeLipids <- screeLipids +
   theme_linedraw()
 indLipids <-
   fviz_pca_ind(Lipids.pca,
-               col.ind = paclitaxel_uct_imputed$Neuropathie, geom = c("point", "text"), labelsize = 3,
-               # gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-               repel = TRUE
+    col.ind = paclitaxel_uct_imputed$Neuropathie, geom = c("point", "text"), labelsize = 3,
+    # gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+    repel = TRUE
   ) +
   theme_linedraw() +
   theme(legend.position = "none")
@@ -51,7 +51,7 @@ Lipids_contrib_ABCplot <- ABCplotGG(ContribSumScore$`Lipids_contrib_weighted$Sum
   ggtitle("ABC plot variable importance")
 Lipids_contrib_ABC_nested <- ABCanalysis(ContribSumScore$`Lipids_contrib_weighted$Sum`[ContribSumScore$`Lipids_contrib_weighted$Sum` >= Lipids_contrib_ABC$ABLimit], PlotIt = T)
 PCA_selectedFeatues <- ContribSumScore$`Lipids_contrib$Lipids.pca_contrib.data.name`[Lipids_contrib_ABC$Aind]
-#write.csv(PCA_selectedFeatues, "PCA_selectedFeatues.csv")
+# write.csv(PCA_selectedFeatues, "PCA_selectedFeatues.csv")
 
 head(ContribSumScore[order(-ContribSumScore$`Lipids_contrib_weighted$Sum`), ], length(Lipids_contrib_ABC$Aind))
 head(ContribSumScore$`Lipids_contrib$Lipids.pca_contrib.data.name`[order(-ContribSumScore$`Lipids_contrib_weighted$Sum`)], length(Lipids_contrib_ABC$Aind))
@@ -76,14 +76,14 @@ Lipids.hcpc <- HCPC(Lipids.pca, consol = T, nb.clust = 2, iter.max = 100, graph 
 
 dendLipids <- factoextra::fviz_dend(Lipids.hcpc, show_labels = T, cex = .2, type = "rectangle", k_colors = colorblind_pal()(4), ggtheme = theme_linedraw()) + xlab("Cases")
 fmapLipids <- factoextra::fviz_cluster(Lipids.hcpc,
-                                       labelsize = .1, col.ind = paclitaxel_uct_imputed$Neuropathie, repel = F,
-                                       geom = c("point"), main = "Factor map", ellipse.tytpe = "t",
-                                       palette = colorblind_pal()(4), ggtheme = theme_linedraw()
+  labelsize = .1, col.ind = paclitaxel_uct_imputed$Neuropathie, repel = F,
+  geom = c("point"), main = "Factor map", ellipse.tytpe = "t",
+  palette = colorblind_pal()(4), ggtheme = theme_linedraw()
 ) +
   theme(legend.position = "none")
 silclust <- Lipids.hcpc$data.clust$clust # car::recode(Lipids.hcpc$data.clust$clust,"1=2; 2=3;3=1")
 silLipids <- factoextra::fviz_silhouette(silhouette(as.numeric(silclust), dist(as.matrix(Lipids.pca$ind$coord))),
-                                         palette = alpha(colorblind_pal()(4), .5), legend = "NA", ggtheme = theme_linedraw(), ylim = c(0, 0.3), alpha = .1
+  palette = alpha(colorblind_pal()(4), .5), legend = "NA", ggtheme = theme_linedraw(), ylim = c(0, 0.3), alpha = .1
 ) +
   coord_flip() + ylim(0, 0.4) +
   theme(axis.text.y = element_text(size = 5)) +
@@ -107,10 +107,13 @@ mosaicLipids <-
 ggarrange(ggarrange(
   ggarrange(indLipids, labels = paste0(letters[1], ")")),
   ggarrange(screeLipids, mosaicLipids, fmapLipids, dendLipids,
-            labels = paste0(letters[2:5], ")"),
-            ncol = 2, nrow = 2, align = "hv" ) ),
-  ggarrange(Lipids.pca.varimp, Lipids_contrib_ABCplot, widths = c(3, 1), labels = paste0(letters[6:7], ")")),
-  ncol = 1, heights = c(2, 1), align = "hv")
+    labels = paste0(letters[2:5], ")"),
+    ncol = 2, nrow = 2, align = "hv"
+  )
+),
+ggarrange(Lipids.pca.varimp, Lipids_contrib_ABCplot, widths = c(3, 1), labels = paste0(letters[6:7], ")")),
+ncol = 1, heights = c(2, 1), align = "hv"
+)
 
 # Cluster stability
 library(fossil)
@@ -174,8 +177,8 @@ Cls_Umx[is.na(Cls_Umx)] <- 3
 # WriteUMX(FileName = "Lipids_Umx.umx", UMatrix = Lipids_Umx$Umatrix)
 # WriteWTS(FileName = "Lipids_Umx.wts", wts = Lipids_Umx$Weights)
 
-BestMatches = ReadBM(FileName = "Lipids_Umx.bm", InDirectory = paste0(pfad_o, pfad_umx))
-UMatrix = ReadUMX(FileName = "Lipids_Umx.umx", InDirectory = paste0(pfad_o, pfad_umx))
+BestMatches <- ReadBM(FileName = "Lipids_Umx.bm", InDirectory = paste0(pfad_o, pfad_umx))
+UMatrix <- ReadUMX(FileName = "Lipids_Umx.umx", InDirectory = paste0(pfad_o, pfad_umx))
 Weigths <- ReadWTS(FileName = "Lipids_Umx.wts", InDirectory = paste0(pfad_o, pfad_umx))
 
 # Lipids_Imx <- Umatrix::iUmapIsland(Umatrix = UMatrix, BestMatches = BestMatches$BestMatches, Cls = Cls_Umx)
@@ -188,19 +191,23 @@ Lipids_ClsUmx <- ReadCLS("Lipids_Cls.cls", InDirectory = paste0(pfad_o, pfad_umx
 Lipids_ClsUmx$Cls[Lipids_ClsUmx$Cls > 1] <- 2
 table(Lipids_ClsUmx$Cls)
 
-Umatrix::plotMatrix( Matrix = UMatrix, BestMatches = BestMatches$BestMatches, Cls = Lipids_ClsUmx$Cls, Imx = Imx, 
-                     TransparentContours = T, BmSize = 10, RemoveOcean = T)
-Umatrix::showMatrix3D( Matrix = UMatrix, BestMatches = BestMatches$BestMatches, Cls = Lipids_ClsUmx$Cls, Imx = Imx, 
-                       BmSize = 1, RemoveOcean = T)
+Umatrix::plotMatrix(
+  Matrix = UMatrix, BestMatches = BestMatches$BestMatches, Cls = Lipids_ClsUmx$Cls, Imx = Imx,
+  TransparentContours = T, BmSize = 10, RemoveOcean = T
+)
+Umatrix::showMatrix3D(
+  Matrix = UMatrix, BestMatches = BestMatches$BestMatches, Cls = Lipids_ClsUmx$Cls, Imx = Imx,
+  BmSize = 1, RemoveOcean = T
+)
 library(rgl)
-snapshot3d("Lipids_Umx_3d.png","png")
+snapshot3d("Lipids_Umx_3d.png", "png")
 
 
 fisher.test(table(Lipids_ClsUmx$Cls, paclitaxel_uct_imputed$Probe.1.oder.2))
 fisher.test(table(Lipids_ClsUmx$Cls, paclitaxel_uct_imputed$Neuropathie))
 fisher.test(table(Lipids_ClsUmx$Cls, silclust))
 
-# write.csv(cbind.data.frame(Probe12 = paclitaxel_uct_imputed_log$Probe.1.oder.2, 
+# write.csv(cbind.data.frame(Probe12 = paclitaxel_uct_imputed_log$Probe.1.oder.2,
 #                            Neuropaty = paclitaxel_uct_imputed_log$Neuropathie,
 #                            Clusters = silclust), "dfLipids_Classes.csv")
 # write.csv(rownames(paclitaxel_uct_imputed_log), "Index.csv")

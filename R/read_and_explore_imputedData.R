@@ -5,15 +5,15 @@ pfad_u1 <- "01Transformierte/sissignano/paclitaxel/results/"
 ###################################### UCT #######################################################
 paclitaxel_uct_imputed <- read.csv(paste0(pfad_o, pfad_u1, "paclitaxel_uct_imputed.csv"))
 rownames(paclitaxel_uct_imputed) <- paste0(
-        paclitaxel_uct_imputed$Patientennummer, "_Day_", paclitaxel_uct_imputed$Probe.1.oder.2,
-        "_NP_", ifelse(paclitaxel_uct_imputed$Probe.1.oder.2 > 1, paclitaxel_uct_imputed$Neuropathie..0.5.., "Baseline")
+  paclitaxel_uct_imputed$Patientennummer, "_Day_", paclitaxel_uct_imputed$Probe.1.oder.2,
+  "_NP_", ifelse(paclitaxel_uct_imputed$Probe.1.oder.2 > 1, paclitaxel_uct_imputed$Neuropathie..0.5.., "Baseline")
 )
 names(paclitaxel_uct_imputed)
 
 nonLipidVariableNames <- c(
-        "Messung", "Patientennummer", "Initialen", "Geburtsjahr", "Probe.1.oder.2",
-        "Zyklus", "Neuropathie..0.5..", "Datum.der.Blutentnahme",
-        "Baehandlungsregime...Dosieung.Paclitaxel..mg.m.2."
+  "Messung", "Patientennummer", "Initialen", "Geburtsjahr", "Probe.1.oder.2",
+  "Zyklus", "Neuropathie..0.5..", "Datum.der.Blutentnahme",
+  "Baehandlungsregime...Dosieung.Paclitaxel..mg.m.2."
 )
 LipidVariableNames <- setdiff(names(paclitaxel_uct_imputed), nonLipidVariableNames)
 
@@ -61,14 +61,14 @@ library(cluster)
 dfLipids <- paclitaxel_uct_imputed_log[names(paclitaxel_uct_imputed_log) %in% LipidVariableNames]
 dfLipids_scaled <- scale(dfLipids)
 Heatmap(as.matrix(dfLipids_scaled),
-        cluster_rows = F,
-        clustering_method_columns = "ward.D2",
-        col = rev(topo.colors(123)),
-        row_dend_width = unit(4, "cm"),
-        column_dend_height = unit(4, "cm"),
-        show_heatmap_legend = T,
-        row_names_gp = gpar(fontsize = 8),
-        column_names_gp = gpar(fontsize = 5)
+  cluster_rows = F,
+  clustering_method_columns = "ward.D2",
+  col = rev(topo.colors(123)),
+  row_dend_width = unit(4, "cm"),
+  column_dend_height = unit(4, "cm"),
+  show_heatmap_legend = T,
+  row_names_gp = gpar(fontsize = 8),
+  column_names_gp = gpar(fontsize = 5)
 )
 
 library(ggplot2)
@@ -77,15 +77,17 @@ library(ggthemes)
 dim(dfLipids)
 dfLipids_long <- reshape2::melt(dfLipids)
 dfLipids_long$figpanel <- 2
-dfLipids_long$figpanel[1:(dim(dfLipids)[1]* floor(dim(dfLipids)[2]/2))] <- 1
+dfLipids_long$figpanel[1:(dim(dfLipids)[1] * floor(dim(dfLipids)[2] / 2))] <- 1
 ggplot(data = dfLipids_long, aes(x = variable, y = value)) +
   geom_violin(color = "lightsalmon4") +
-#  geom_boxplot(outlier.shape = NA, color = "dodgerblue4") +
-  facet_wrap(~ figpanel, scale = "free_x", ncol = 1) +
+  #  geom_boxplot(outlier.shape = NA, color = "dodgerblue4") +
+  facet_wrap(~figpanel, scale = "free_x", ncol = 1) +
   theme_grey() +
-  theme( strip.background = element_blank(), strip.text.x = element_blank()  ,
-         axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust = 1, color = "black")) +
-  labs(x = NULL, y = "log concentration") 
+  theme(
+    strip.background = element_blank(), strip.text.x = element_blank(),
+    axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust = 1, color = "black")
+  ) +
+  labs(x = NULL, y = "log concentration")
 
 
 # Einige Tests von Lipiden, die sich laut vorwissen regulieren koennten
