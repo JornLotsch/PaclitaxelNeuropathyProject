@@ -73,6 +73,7 @@ Heatmap(as.matrix(dfLipids_scaled),
 
 library(ggplot2)
 library(ggthemes)
+library(ggforce)
 
 dim(dfLipids)
 dfLipids_long <- reshape2::melt(dfLipids)
@@ -81,6 +82,7 @@ dfLipids_long$figpanel[1:(dim(dfLipids)[1] * floor(dim(dfLipids)[2] / 2))] <- 1
 ggplot(data = dfLipids_long, aes(x = variable, y = value)) +
   geom_violin(color = "lightsalmon4") +
   #  geom_boxplot(outlier.shape = NA, color = "dodgerblue4") +
+  geom_sina(size = .01, color = "lightsalmon2",alpha=0.4) +
   facet_wrap(~figpanel, scale = "free_x", ncol = 1) +
   theme_grey() +
   theme(
