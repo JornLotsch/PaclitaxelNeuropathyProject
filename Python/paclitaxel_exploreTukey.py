@@ -16,8 +16,7 @@ from sklearn.preprocessing import StandardScaler
 from box_and_heatplots import box_and_heatplot
 from explore_tukey_lop import explore_tukey_lop
 from compute_PCA import perform_pca
-from ABCanalysis import ABC_analysis
-
+from cABCanalysis import  cABCanalysis
 
 # %% Read data
 # UCT
@@ -57,6 +56,6 @@ y = dfpaclitaxel_uct_imputed_log["Neuropathie"]
 PCA_paclitaxel_uct, PCA_paclitaxel_uct_feature_importance = perform_pca(
     PCA_data, target=y, biplot=False, PC_criterion="KaiserGuttman", plotReduced=2)
 
-ABC_A = ABC_analysis(PCA_paclitaxel_uct_feature_importance)
+ABC_A =  cABCanalysis(PCA_paclitaxel_uct_feature_importance)
 print(list(ABC_A["Aind"].index))
 

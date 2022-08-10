@@ -1,1 +1,0 @@
-/home/joern/Aktuell/ABCPython/08AnalyseProgramme/Python/ABCanalysis/ABCanalysis.py
