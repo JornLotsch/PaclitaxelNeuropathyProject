@@ -61,24 +61,16 @@ dfPaclitaxel.index
 
 Paclitaxel_targets = pd.read_csv(pfad_o1 + pfad_u3 + "dfLipids_Classes.csv")
 Paclitaxel_targets .columns
-Paclitaxel_targets .set_index(dfPaclitaxel.index, inplace=True)
 
-# %% Day 2 only
-Paclitaxel_targets_Day2 = Paclitaxel_targets.loc[Paclitaxel_targets["Probe12"] == 2]
-Paclitaxel_targets_Day2 .shape
-i1 = dfPaclitaxel.index
-i2 = Paclitaxel_targets_Day2.index
-dfPaclitaxel_Day2 = dfPaclitaxel[i1.isin(i2)]
-dfPaclitaxel_Day2 .shape
 
 # %% Cluster explnation ML
 
-y = Paclitaxel_targets_Day2["Neuropaty"]
+y = Paclitaxel_targets["Probe12"]
 pd.DataFrame(y).value_counts()
 
 
 X_train, X_test, y_train, y_test = train_test_split(
-    dfPaclitaxel_Day2, y, test_size=0.2, random_state=42)
+    dfPaclitaxel, y, test_size=0.2, random_state=42)
 pd.DataFrame(y_test).value_counts()
 # https://towardsdatascience.com/how-to-find-decision-tree-depth-via-cross-validation-2bf143f0f3d6
 
@@ -212,9 +204,9 @@ sns.barplot(ax=ax, x=features_CohenD_all.index.to_numpy(),
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
 
-feature_table_Day2 = feature_table.copy()
-file = "feature_table_Day2.csv"
-feature_table_Day2.to_csv(file)
+feature_table_day12 = feature_table.copy()
+file = "feature_table_day12.csv"
+feature_table_day12.to_csv(file)
 
 # %% FPR based selection
 
@@ -252,9 +244,9 @@ sns.barplot(ax=ax, x=features_FPR_all.index.to_numpy(),
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
 
-feature_table_Day2 = feature_table.copy()
-file = "feature_table_Day2.csv"
-feature_table_Day2.to_csv(file)
+feature_table_day12 = feature_table.copy()
+file = "feature_table_day12.csv"
+feature_table_day12.to_csv(file)
 
 # %% FWE based selection
 
@@ -292,9 +284,9 @@ sns.barplot(ax=ax, x=features_FWE_all.index.to_numpy(),
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
 
-feature_table_Day2 = feature_table.copy()
-file = "feature_table_Day2.csv"
-feature_table_Day2.to_csv(file)
+feature_table_day12 = feature_table.copy()
+file = "feature_table_day12.csv"
+feature_table_day12.to_csv(file)
 
 # %% Feature selection univariate selectKbest
 
@@ -398,9 +390,9 @@ fig, ax = plt.subplots(figsize=(18, 16))
 sns.barplot(ax=ax, x=features_sKb.index.tolist(), y=features_sKb.iloc[:, 0])
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
-feature_table_Day2 = feature_table.copy()
-file = "feature_table_Day2.csv"
-feature_table_Day2.to_csv(file)
+feature_table_day12 = feature_table.copy()
+file = "feature_table_day12.csv"
+feature_table_day12.to_csv(file)
 
 # %% Feature selection Select from model
 
@@ -483,9 +475,9 @@ fig, ax = plt.subplots(figsize=(18, 16))
 sns.barplot(ax=ax, x=features_SFM.index.tolist(), y=features_SFM.iloc[:, 0])
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
-feature_table_Day2 = feature_table.copy()
-file = "feature_table_Day2.csv"
-feature_table_Day2.to_csv(file)
+feature_table_day12 = feature_table.copy()
+file = "feature_table_day12.csv"
+feature_table_day12.to_csv(file)
 
 # %% Feature selection RFE
 
@@ -551,28 +543,28 @@ fig, ax = plt.subplots(figsize=(18, 16))
 ax = sns.barplot(x=features_RFE.index.tolist(), y=features_RFE.iloc[:, 0])
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
-feature_table_Day2 = feature_table.copy()
-file = "feature_table_Day2.csv"
-feature_table_Day2.to_csv(file)
+feature_table_day12 = feature_table.copy()
+file = "feature_table_day12.csv"
+feature_table_day12.to_csv(file)
 
 
 # %% Save results in table
-feature_table_Day2 = feature_table.copy()
-# file = "feature_table_Day2.csv"
-# feature_table_Day2.to_csv(file)
+feature_table_day12 = feature_table.copy()
+# file = "feature_table_day12.csv"
+# feature_table_day12.to_csv(file)
 
 # Reload the results from file to run validation without repeating feature selection
-feature_table_Day2a = pd.read_csv(
-    "/home/joern/Aktuell/PaclitaxelPainLipidomics/08AnalyseProgramme/Python/feature_table_Day2.csv")
-feature_table_Day2a.columns
+feature_table_day12a = pd.read_csv(
+    "/home/joern/Aktuell/PaclitaxelPainLipidomics/08AnalyseProgramme/Python/feature_table_day12.csv")
+feature_table_day12a.columns
 
-feature_table_Day2a.set_index("Unnamed: 0", inplace=True)
-feature_table_Day2a.index
+feature_table_day12a.set_index("Unnamed: 0", inplace=True)
+feature_table_day12a.index
 
 # %% feature selection sum score for ABC for selection of final feature set
 
-FS_sumscore_day2 = feature_table_Day2a.sum(axis=1)
-FS_sumscore_day2.sort_values(ascending=False, inplace=True)
+FS_sumscore_day12 = feature_table_day12a.sum(axis=1)
+FS_sumscore_day12.sort_values(ascending=False, inplace=True)
 
 with sns.axes_style("darkgrid"):
     fig = plt.figure(figsize=(12, 14))
@@ -585,11 +577,11 @@ with sns.axes_style("darkgrid"):
         annotate_axes(ax,  str(string.ascii_lowercase[i]) + ")")
 
     ABC_A_FS_sumscore =  cABCanalysis(
-        ax=ax1, data=FS_sumscore_day2, PlotIt=True)
+        ax=ax1, data=FS_sumscore_day12, PlotIt=True)
     ABC_A_FS_sumscore_nested =  cABCanalysis(ABC_A_FS_sumscore["Aind"]["value"])
 
-    barcols = ["dodgerblue" if (i) < ABC_A_FS_sumscore["ABlimit"] else "blue" if i <
-               ABC_A_FS_sumscore_nested["ABlimit"] else "blue" for i in FS_sumscore_day12]
+    barcols = ["wheat" if (i) < ABC_A_FS_sumscore["ABlimit"] else "tan" if i <
+               ABC_A_FS_sumscore_nested["ABlimit"] else "tan" for i in FS_sumscore_day12]
     ax1.set_title("ABC plot")
     sns.barplot(ax=ax2, x=FS_sumscore_day12.index.tolist(),
                 y=FS_sumscore_day12, palette=barcols, alpha=1)
@@ -610,12 +602,12 @@ for i, ax in enumerate(axes):
     annotate_axes(ax,  str(string.ascii_lowercase[i]) + ")")
 
 ABC_A_FS_sumscore =  cABCanalysis(
-    ax=ax1, data=FS_sumscore_day2, PlotIt=True)
+    ax=ax1, data=FS_sumscore_day12, PlotIt=True)
 ABC_A_FS_sumscore_nested =  cABCanalysis(
     ax=ax3, data=ABC_A_FS_sumscore["Aind"]["value"], PlotIt=True)
 
-barcols = ["dodgerblue" if (i) < ABC_A_FS_sumscore["ABlimit"] else "blue" if i <
-           ABC_A_FS_sumscore_nested["ABlimit"] else "darkblue" for i in FS_sumscore_day12]
+barcols = ["wheat" if (i) < ABC_A_FS_sumscore["ABlimit"] else "peru" if i <
+           ABC_A_FS_sumscore_nested["ABlimit"] else "saddlebrown" for i in FS_sumscore_day12]
 ax1.set_title("ABC plot")
 ax3.set_title("ABC plot (nested)")
 sns.barplot(ax=ax2, x=FS_sumscore_day12.index.tolist(),
@@ -630,9 +622,9 @@ ax2.set_xticklabels(ax2.get_xticklabels(), rotation=90)
 reduced_feature_names = ABC_A_FS_sumscore["Aind"].index.tolist()
 sparse_feature_names = ABC_A_FS_sumscore_nested["Aind"].index.tolist()
 
-# file = "reduced_feature_names_Day2.csv"
+# file = "reduced_feature_names_day12.csv"
 # ABC_A_FS_sumscore["Aind"].to_csv(file)
-# file = "sparse_feature_names_Day2.csv"
+# file = "sparse_feature_names_day12.csv"
 # ABC_A_FS_sumscore_nested["Aind"].to_csv(file)
 
 # %% Test of selected features whether they suffice to predict the separate validation data subset
@@ -677,7 +669,7 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_lsvc_fullFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_lsvc_fullFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     forest = RandomForestClassifier(random_state=0, bootstrap=bootstrap_rf,  max_depth=max_depth_rf, max_features=max_features_rf,
                                     min_samples_leaf=min_samples_leaf_rf, min_samples_split=min_samples_split_rf, n_estimators=n_estimators_rf, n_jobs=-1)
@@ -687,7 +679,7 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_RF_fullFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_RF_fullFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     LogReg = LogisticRegression(C=C_LogReg,  penalty=penalty_LogReg, solver=solver_LogReg,
                                 tol=tol_LogReg, max_iter=10000, random_state=0, n_jobs=-1)
@@ -697,14 +689,14 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_LogReg_fullFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_LogReg_fullFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     # kNN = KNeighborsClassifier(n_neighbors = n_neighbors_kNN)
     # kNN.fit(X_train_FS, y_train_FS)
     # y_pred = kNN.predict(X_test_validation)
     # y_pred_proba = kNN.predict_proba(X_test_validation)
     # BA_kNN_fullFeatureSet.append(balanced_accuracy_score(y_test_validation, y_pred))
-    # ROC_kNN_fullFeatureSet.append(roc_auc_score(y_test_validation_num, y_pred_proba[::,0])
+    # ROC_kNN_fullFeatureSet.append(roc_auc_score(y_test_validation_num, y_pred_proba[::,1])
 
     # Reduced feature set
     X_train_FS_reduced = X_train_FS[reduced_feature_names]
@@ -721,7 +713,7 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_lsvc_reducedFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_lsvc_reducedFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     forest = RandomForestClassifier(random_state=0, bootstrap=bootstrap_rf,  max_depth=max_depth_rf, max_features=max_features_rf,
                                     min_samples_leaf=min_samples_leaf_rf, min_samples_split=min_samples_split_rf, n_estimators=n_estimators_rf, n_jobs=-1)
@@ -731,7 +723,7 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_RF_reducedFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_RF_reducedFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     LogReg = LogisticRegression(C=C_LogReg,  penalty=penalty_LogReg, solver=solver_LogReg,
                                 tol=tol_LogReg, max_iter=10000, random_state=0, n_jobs=-1)
@@ -741,58 +733,61 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_LogReg_reducedFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_LogReg_reducedFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     # kNN = KNeighborsClassifier(n_neighbors = n_neighbors_kNN)
     # kNN.fit(X_train_FS, y_train_FS)
     # y_pred = kNN.predict(X_test_validation_reduced)
     # y_pred_proba = kNN.predict_proba(X_test_validation_reduced)
     # BA_kNN_reducedFeatureSet.append(balanced_accuracy_score(y_test_validation, y_pred))
-    # ROC_kNN_reducedFeatureSet.append(roc_auc_score(y_test_validation_num, y_pred_proba[::,0]))
+    # ROC_kNN_reducedFeatureSet.append(roc_auc_score(y_test_validation_num, y_pred_proba[::,1]))
 
     # Reduced feature set permuted
     X_train_FS_reduced = X_train_FS[reduced_feature_names]
     X_test_validation_reduced = X_test_validation[reduced_feature_names]
+    
+    X_train_FS_reduced_permuted  = X_train_FS_reduced.copy()
+    X_train_FS_reduced_permuted.sample(frac=1, inplace = True)
 
     #lsvc = LinearSVC(C = C_lsvm, penalty = penalty_SVM, dual = dual_svm, loss = loss_svm, tol = tol_svm, max_iter=10000)
     lsvc = SVC(C=C_svs, kernel=kernel_svs, gamma=gamma_svs,
                tol=tol_svs, max_iter=10000, random_state=0)
-    lsvc.fit(X_train_FS_reduced, y_train_FS)
+    lsvc.fit(X_train_FS_reduced_permuted, y_train_FS)
     clf = CalibratedClassifierCV(lsvc)
-    clf.fit(X_train_FS_reduced, y_train_FS)
+    clf.fit(X_train_FS_reduced_permuted, y_train_FS)
     y_pred = lsvc.predict(X_test_validation_reduced)
     y_pred_proba = clf.predict_proba(X_test_validation_reduced)
     BA_lsvc_reducedFeatureSet_permuted.append(
-        balanced_accuracy_score(y_test_validation_permuted, y_pred))
+        balanced_accuracy_score(y_test_validation, y_pred))
     ROC_lsvc_reducedFeatureSet_permuted.append(roc_auc_score(
-        y_test_validation_num_permuted, y_pred_proba[::, 0]))
+        y_test_validation_num_permuted, y_pred_proba[::, 1]))
 
     forest = RandomForestClassifier(random_state=0, bootstrap=bootstrap_rf,  max_depth=max_depth_rf, max_features=max_features_rf,
                                     min_samples_leaf=min_samples_leaf_rf, min_samples_split=min_samples_split_rf, n_estimators=n_estimators_rf, n_jobs=-1)
-    forest.fit(X_train_FS_reduced, y_train_FS)
+    forest.fit(X_train_FS_reduced_permuted, y_train_FS)
     y_pred = forest.predict(X_test_validation_reduced)
     y_pred_proba = forest.predict_proba(X_test_validation_reduced)
     BA_RF_reducedFeatureSet_permuted.append(
-        balanced_accuracy_score(y_test_validation_permuted, y_pred))
+        balanced_accuracy_score(y_test_validation, y_pred))
     ROC_RF_reducedFeatureSet_permuted.append(roc_auc_score(
-        y_test_validation_num_permuted, y_pred_proba[::, 0]))
+        y_test_validation_num_permuted, y_pred_proba[::, 1]))
 
     LogReg = LogisticRegression(C=C_LogReg,  penalty=penalty_LogReg, solver=solver_LogReg,
                                 tol=tol_LogReg, max_iter=10000, random_state=0, n_jobs=-1)
-    LogReg.fit(X_train_FS_reduced, y_train_FS)
+    LogReg.fit(X_train_FS_reduced_permuted, y_train_FS)
     y_pred = LogReg.predict(X_test_validation_reduced)
     y_pred_proba = LogReg.predict_proba(X_test_validation_reduced)
     BA_LogReg_reducedFeatureSet_permuted.append(
-        balanced_accuracy_score(y_test_validation_permuted, y_pred))
+        balanced_accuracy_score(y_test_validation, y_pred))
     ROC_LogReg_reducedFeatureSet_permuted.append(roc_auc_score(
-        y_test_validation_num_permuted, y_pred_proba[::, 0]))
+        y_test_validation_num_permuted, y_pred_proba[::, 1]))
 
     # kNN = KNeighborsClassifier(n_neighbors = n_neighbors_kNN)
-    # kNN.fit(X_train_FS, y_train_FS)
+    # kNN.fit(X_train_FS_reduced_permuted, y_train_FS)
     # y_pred = kNN.predict(X_test_validation_reduced)
     # y_pred_proba = kNN.predict_proba(X_test_validation_reduced)
-    # BA_kNN_reducedFeatureSet_permuted.append(balanced_accuracy_score(y_test_validation_permuted, y_pred))
-    # ROC_kNN_reducedFeatureSet_permuted.append(roc_auc_score(y_test_validation_num_permuted, y_pred_proba[::,0]))
+    # BA_kNN_reducedFeatureSet_permuted.append(balanced_accuracy_score(y_test_validation, y_pred))
+    # ROC_kNN_reducedFeatureSet_permuted.append(roc_auc_score(y_test_validation_num_permuted, y_pred_proba[::,1]))
 
     # Sparse feature set
     X_train_FS_sparse = X_train_FS[sparse_feature_names]
@@ -809,7 +804,7 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_lsvc_sparseFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_lsvc_sparseFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     forest = RandomForestClassifier(random_state=0, bootstrap=bootstrap_rf,  max_depth=max_depth_rf, max_features=max_features_rf,
                                     min_samples_leaf=min_samples_leaf_rf, min_samples_split=min_samples_split_rf, n_estimators=n_estimators_rf)
@@ -819,7 +814,7 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_RF_sparseFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_RF_sparseFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     LogReg = LogisticRegression(C=C_LogReg,  penalty=penalty_LogReg,
                                 solver=solver_LogReg, tol=tol_LogReg, max_iter=10000, random_state=0)
@@ -829,14 +824,14 @@ for train_index, test_index in rskf.split(X_train, y_train):
     BA_LogReg_sparseFeatureSet.append(
         balanced_accuracy_score(y_test_validation, y_pred))
     ROC_LogReg_sparseFeatureSet.append(roc_auc_score(
-        y_test_validation_num, y_pred_proba[::, 0]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     # kNN = KNeighborsClassifier(n_neighbors = n_neighbors_kNN, algorithm = algorithm_kNN, p = p_kNN, leaf_size= leaf_size_kNN, metric = metric_kNN )
-    # kNN.fit(X_train_FS, y_train_FS)
+    # kNN.fit(X_train_FS_sparse, y_train_FS)
     # y_pred = kNN.predict(X_test_validation_sparse)
     # y_pred_proba = kNN.predict_proba(X_test_validation_sparse)
     # BA_kNN_sparseFeatureSet.append(balanced_accuracy_score(y_test_validation, y_pred))
-    # ROC_kNN_sparseFeatureSet.append(roc_auc_score(y_test_validation_num, y_pred_proba[::,0]))
+    # ROC_kNN_sparseFeatureSet.append(roc_auc_score(y_test_validation_num, y_pred_proba[::,1]))
 
 
 CV_results_BA = pd.DataFrame(np.column_stack([BA_lsvc_fullFeatureSet, BA_RF_fullFeatureSet, BA_LogReg_fullFeatureSet,
@@ -878,11 +873,4 @@ sns.boxplot(ax=ax, data=CV_results_ROC)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
 
-# %% Only univariate selection methods
-feature_table_Day2.columns
-
-FS_sumscore_day2_univariate = feature_table_Day2[[
-    'features_CohenD', 'features_FPR', 'features_FWE']].sum(axis=1)
-FS_sumscore_day2_univariate.sort_values(ascending=False, inplace=True)
-
-reduced_feature_names_univariate = FS_sumscore_day2_univariate[FS_sumscore_day2_univariate == 3]
+# %%

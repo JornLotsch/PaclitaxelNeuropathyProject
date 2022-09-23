@@ -8,6 +8,8 @@ Created on Sat Jan  1 16:14:53 2022
 # https://coderzcolumn.com/tutorials/machine-learning/scikit-learn-sklearn-feature-selection
 
 # %% imports
+import os
+os.chdir("/home/joern/Aktuell/PaclitaxelPainLipidomics/08AnalyseProgramme/PaclitaxelNeuropathyProject/Python/")
 
 import pandas as pd
 import numpy as np
@@ -21,7 +23,8 @@ from sklearn.model_selection import train_test_split, RepeatedStratifiedKFold, G
 from sklearn.svm import LinearSVC, SVC
 from sklearn.feature_selection import SelectFromModel, RFE, SequentialFeatureSelector, SelectKBest, f_classif, SelectFpr, SelectFwe
 from sklearn.ensemble import RandomForestClassifier
-from cABCanalysis import  cABCanalysisfrom sklearn.linear_model import LogisticRegression
+from cABCanalysis import  cABCanalysis
+from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.calibration import CalibratedClassifierCV
@@ -742,46 +745,49 @@ for train_index, test_index in rskf.split(X_train, y_train):
     # Reduced feature set permuted
     X_train_FS_reduced = X_train_FS[reduced_feature_names]
     X_test_validation_reduced = X_test_validation[reduced_feature_names]
+    
+    X_train_FS_reduced_permuted  = X_train_FS_reduced.copy()
+    X_train_FS_reduced_permuted = X_train_FS_reduced_permuted.apply(lambda x: x.sample(frac=1).values)
 
     #lsvc = LinearSVC(C = C_lsvm, penalty = penalty_SVM, dual = dual_svm, loss = loss_svm, tol = tol_svm, max_iter=10000)
     lsvc = SVC(C=C_svs, kernel=kernel_svs, gamma=gamma_svs,
                tol=tol_svs, max_iter=10000, random_state=0)
-    lsvc.fit(X_train_FS_reduced, y_train_FS)
+    lsvc.fit(X_train_FS_reduced_permuted, y_train_FS)
     clf = CalibratedClassifierCV(lsvc)
-    clf.fit(X_train_FS_reduced, y_train_FS)
+    clf.fit(X_train_FS_reduced_permuted, y_train_FS)
     y_pred = lsvc.predict(X_test_validation_reduced)
     y_pred_proba = clf.predict_proba(X_test_validation_reduced)
     BA_lsvc_reducedFeatureSet_permuted.append(
-        balanced_accuracy_score(y_test_validation_permuted, y_pred))
+        balanced_accuracy_score(y_test_validation, y_pred))
     ROC_lsvc_reducedFeatureSet_permuted.append(roc_auc_score(
-        y_test_validation_num_permuted, y_pred_proba[::, 1]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     forest = RandomForestClassifier(random_state=0, bootstrap=bootstrap_rf,  max_depth=max_depth_rf, max_features=max_features_rf,
                                     min_samples_leaf=min_samples_leaf_rf, min_samples_split=min_samples_split_rf, n_estimators=n_estimators_rf, n_jobs=-1)
-    forest.fit(X_train_FS_reduced, y_train_FS)
+    forest.fit(X_train_FS_reduced_permuted, y_train_FS)
     y_pred = forest.predict(X_test_validation_reduced)
     y_pred_proba = forest.predict_proba(X_test_validation_reduced)
     BA_RF_reducedFeatureSet_permuted.append(
-        balanced_accuracy_score(y_test_validation_permuted, y_pred))
+        balanced_accuracy_score(y_test_validation, y_pred))
     ROC_RF_reducedFeatureSet_permuted.append(roc_auc_score(
-        y_test_validation_num_permuted, y_pred_proba[::, 1]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     LogReg = LogisticRegression(C=C_LogReg,  penalty=penalty_LogReg, solver=solver_LogReg,
                                 tol=tol_LogReg, max_iter=10000, random_state=0, n_jobs=-1)
-    LogReg.fit(X_train_FS_reduced, y_train_FS)
+    LogReg.fit(X_train_FS_reduced_permuted, y_train_FS)
     y_pred = LogReg.predict(X_test_validation_reduced)
     y_pred_proba = LogReg.predict_proba(X_test_validation_reduced)
     BA_LogReg_reducedFeatureSet_permuted.append(
-        balanced_accuracy_score(y_test_validation_permuted, y_pred))
+        balanced_accuracy_score(y_test_validation, y_pred))
     ROC_LogReg_reducedFeatureSet_permuted.append(roc_auc_score(
-        y_test_validation_num_permuted, y_pred_proba[::, 1]))
+        y_test_validation_num, y_pred_proba[::, 1]))
 
     # kNN = KNeighborsClassifier(n_neighbors = n_neighbors_kNN)
-    # kNN.fit(X_train_FS_reduced, y_train_FS)
+    # kNN.fit(X_train_FS_reduced_permuted, y_train_FS)
     # y_pred = kNN.predict(X_test_validation_reduced)
     # y_pred_proba = kNN.predict_proba(X_test_validation_reduced)
-    # BA_kNN_reducedFeatureSet_permuted.append(balanced_accuracy_score(y_test_validation_permuted, y_pred))
-    # ROC_kNN_reducedFeatureSet_permuted.append(roc_auc_score(y_test_validation_num_permuted, y_pred_proba[::,1]))
+    # BA_kNN_reducedFeatureSet_permuted.append(balanced_accuracy_score(y_test_validation, y_pred))
+    # ROC_kNN_reducedFeatureSet_permuted.append(roc_auc_score(y_test_validation_num, y_pred_proba[::,1]))
 
     # Sparse feature set
     X_train_FS_sparse = X_train_FS[sparse_feature_names]
