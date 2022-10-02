@@ -75,10 +75,20 @@ library(ggplot2)
 library(ggthemes)
 library(ggforce)
 
+# Both days lumped together
 dim(dfLipids)
 dfLipids_long <- reshape2::melt(dfLipids)
 dfLipids_long$figpanel <- 2
-dfLipids_long$figpanel[1:(dim(dfLipids)[1] * floor(dim(dfLipids)[2] / 2))] <- 1
+nPanels <- 2
+nPerPanel <- floor(dim(dfLipids2)[2] / nPanels)
+dfLipids2_long$figpanel <- 2
+SplitsFig <- split(LipidVariableNames, ceiling(seq_along(LipidVariableNames)/nPerPanel))
+for (i in 1:length(SplitsFig)) {
+  dfLipids_long$figpanel[which(dfLipids_long$variable %in% SplitsFig[[i]])] <- i
+}
+# dfLipids_long$figpanel <- 2
+# dfLipids_long$figpanel[1:(dim(dfLipids)[1] * floor(dim(dfLipids)[2] / 2))] <- 1
+
 ggplot(data = dfLipids_long, aes(x = variable, y = value)) +
   geom_violin(color = "lightsalmon4") +
   #  geom_boxplot(outlier.shape = NA, color = "dodgerblue4") +
@@ -90,6 +100,36 @@ ggplot(data = dfLipids_long, aes(x = variable, y = value)) +
     axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust = 1, color = "black")
   ) +
   labs(x = NULL, y = "log concentration")
+
+# Days separated
+dfLipids2 <- dfLipids
+dim(dfLipids2)
+dfLipids2$Samplingday <- 2
+dfLipids2$Samplingday[grep("Base", rownames(dfLipids2))] <- 1
+dfLipids2_long <- reshape2::melt(dfLipids2, id.vars = "Samplingday")
+nPanels <- 4
+nPerPanel <- floor(dim(dfLipids2)[2] / nPanels)
+dfLipids2_long$figpanel <- 2
+SplitsFig <- split(LipidVariableNames, ceiling(seq_along(LipidVariableNames)/nPerPanel))
+for (i in 1:length(SplitsFig)) {
+  dfLipids2_long$figpanel[which(dfLipids2_long$variable %in% SplitsFig[[i]])] <- i
+}
+table(dfLipids2_long$figpanel)
+ggplot(data = dfLipids2_long, aes(x = variable, y = value, color = factor(Samplingday))) +
+  #geom_violin(lwd=.2) +
+    geom_boxplot(outlier.shape = NA, lwd = .2) +
+  geom_sina(alpha=0.2, size = .1) +
+  facet_wrap(~figpanel, scale = "free_x", ncol = 1) +
+  theme_grey() +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  theme( legend.position = c(.1,.58), legend.direction = "horizontal",
+         legend.background = element_rect(colour = "transparent", fill = alpha("white", 0.6)),
+    strip.background = element_blank(), strip.text.x = element_blank(),
+    axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust = 1, color = "black")
+  ) +
+  labs(x = NULL, y = "log concentration", color = "Sampling day")
+
 
 
 # Einige Tests von Lipiden, die sich laut vorwissen regulieren koennten
