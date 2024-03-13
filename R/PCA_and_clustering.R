@@ -11,6 +11,13 @@ library(NbClust)
 library(ggthemes)
 library(ggpubr)
 library(ggmosaic)
+library(dplyr)
+library(magick)
+library(cowplot)
+
+pfad_o0 <- "/home/joern/Aktuell/ProjectionsBiomed/"
+
+source(paste0(pfad_o0, pfad_r, "ProjectionsBiomed_MainFunctions.R"))
 
 
 # Compute PCA
@@ -21,6 +28,12 @@ screeLipids <- fviz_screeplot(Lipids.pca,
 )
 Lipids.pca$eig
 
+
+PCAvoronoiDay12 <- 
+  plotVoronoiTargetProjection3(X = as.data.frame(Lipids.pca$ind$coord[,1:2]), Points = paclitaxel_uct_imputed_log$Probe.1.oder.2) +
+  labs(title = "Separation day1/day2")
+
+
 screeLipids <- screeLipids +
   geom_hline(yintercept = 1, color = "salmon") +
   theme(axis.text.y = element_text(size = 5), axis.text.x = element_text(size = 5)) +
@@ -28,7 +41,7 @@ screeLipids <- screeLipids +
 indLipids <-
   fviz_pca_ind(Lipids.pca,
     col.ind = paclitaxel_uct_imputed$Neuropathie, geom = c("point", "text"), labelsize = 3,
-    # gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+    gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
     repel = TRUE
   ) +
   theme_linedraw() +
@@ -115,6 +128,32 @@ ggarrange(Lipids.pca.varimp, Lipids_contrib_ABCplot, widths = c(3, 1), labels = 
 ncol = 1, heights = c(2, 1), align = "hv"
 )
 
+
+# without clusters
+
+image_Umx_2 <- image_read(paste0(pfad_o, "05OurPublication/Bilder/", "Lipids_Umx_3d_2.png"))
+
+# 1400 x 2400
+plot_grid(plot_grid(
+  plot_grid(indLipids, labels = paste0(letters[1], ")")),
+  plot_grid(PCAvoronoiDay12, Lipids_contrib_ABCplot,
+            labels = paste0(letters[2:3], ")"), 
+            ncol = 1, nrow = 2, align = "hv"
+  ),
+  rel_widths = c(2,1)
+),
+plot_grid(Lipids.pca.varimp, 
+          image_ggplot(image_Umx_2) + ggtitle("U-matrix"),
+          ncol = 1, algin = "v", axes = "lr",
+          labels = paste0(letters[4:5], ")"),
+          rel_heights  = c(4, 2)),
+ncol = 1, rel_heights  = c(2, 3), align = "hv"
+)
+
+
+
+
+
 # Cluster stability
 library(fossil)
 library(psych)
@@ -200,10 +239,10 @@ Umatrix::showMatrix3D(
   BmSize = 1, RemoveOcean = T
 )
 library(rgl)
-snapshot3d("Lipids_Umx_3d.png", "png")
+snapshot3d("Lipids_Umx_3d_2.png", "png")
 
 
-fisher.test(table(Lipids_ClsUmx$Cls, paclitaxel_uct_imputed$Probe.1.oder.2))
+fUmsD1D2 <- fisher.test(table(Lipids_ClsUmx$Cls, paclitaxel_uct_imputed$Probe.1.oder.2))
 fisher.test(table(Lipids_ClsUmx$Cls, paclitaxel_uct_imputed$Neuropathie))
 fisher.test(table(Lipids_ClsUmx$Cls, silclust))
 
@@ -211,3 +250,29 @@ fisher.test(table(Lipids_ClsUmx$Cls, silclust))
 #                            Neuropaty = paclitaxel_uct_imputed_log$Neuropathie,
 #                            Clusters = silclust), "dfLipids_Classes.csv")
 # write.csv(rownames(paclitaxel_uct_imputed_log), "Index.csv")
+
+
+
+mosaicUmxD1D2 <-
+  ggplot(data = cbind.data.frame(Umx = Lipids_ClsUmx$Cls, Original = paclitaxel_uct_imputed$Probe.1.oder.2)) +
+  geom_mosaic(aes(x = product(Umx, Original), fill = Umx), na.rm = TRUE, alpha = .6) +
+  scale_fill_colorblind() +
+  theme_linedraw() +
+  theme(legend.position = "none") +
+  annotate(geom = "text", label = paste0("Fisher test: odds ratio = ", round(fUmsD1D2$estimate, 3), "\np-value = ", round(fUmsD1D2$p.value, 3)), x = .5, y = .5, color = "white") +
+  labs(title = "Contingency table U-matrix versus day1/2", x = "Day1/2", y = "Umatrix-Clusters") +
+  coord_fixed()
+
+  
+
+image_Umx <- image_read(paste0(pfad_o, "05OurPublication/Bilder/", "Lipids_Umx_3d.png"))
+
+# 1400 x 2400
+plot_grid( image_ggplot(image_Umx) + ggtitle("U-matrix"),
+           mosaicUmxD1D2,
+          nrow = 1, 
+          #algin = "h", axes = "tb",
+          labels = paste0(letters[1:2], ")"),
+          rel_widths  = c(2, 1)
+          )
+

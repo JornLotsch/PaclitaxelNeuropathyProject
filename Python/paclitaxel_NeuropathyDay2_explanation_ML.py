@@ -589,10 +589,10 @@ with sns.axes_style("darkgrid"):
     ABC_A_FS_sumscore_nested =  cABCanalysis(ABC_A_FS_sumscore["Aind"]["value"])
 
     barcols = ["dodgerblue" if (i) < ABC_A_FS_sumscore["ABlimit"] else "blue" if i <
-               ABC_A_FS_sumscore_nested["ABlimit"] else "blue" for i in FS_sumscore_day12]
+               ABC_A_FS_sumscore_nested["ABlimit"] else "blue" for i in FS_sumscore_day2]
     ax1.set_title("ABC plot")
-    sns.barplot(ax=ax2, x=FS_sumscore_day12.index.tolist(),
-                y=FS_sumscore_day12, palette=barcols, alpha=1)
+    sns.barplot(ax=ax2, x=FS_sumscore_day2.index.tolist(),
+                y=FS_sumscore_day2, palette=barcols, alpha=1)
     ax2.set_title("Number of selections by 17 different methods")
     ax2.set_xlabel(None)
     ax2.set_ylabel("Times selected")
@@ -615,11 +615,11 @@ ABC_A_FS_sumscore_nested =  cABCanalysis(
     ax=ax3, data=ABC_A_FS_sumscore["Aind"]["value"], PlotIt=True)
 
 barcols = ["dodgerblue" if (i) < ABC_A_FS_sumscore["ABlimit"] else "blue" if i <
-           ABC_A_FS_sumscore_nested["ABlimit"] else "darkblue" for i in FS_sumscore_day12]
+           ABC_A_FS_sumscore_nested["ABlimit"] else "darkblue" for i in FS_sumscore_day2]
 ax1.set_title("ABC plot")
 ax3.set_title("ABC plot (nested)")
-sns.barplot(ax=ax2, x=FS_sumscore_day12.index.tolist(),
-            y=FS_sumscore_day12, palette=barcols, alpha=1)
+sns.barplot(ax=ax2, x=FS_sumscore_day2.index.tolist(),
+            y=FS_sumscore_day2, palette=barcols, alpha=1)
 ax2.set_title("Number of selections by 17 different methods")
 ax2.set_xlabel(None)
 ax2.set_ylabel("Times selected")
@@ -853,6 +853,7 @@ CV_results_BA.std()
 CV_results_BA.quantile()
 CV_results_BA.quantile(0.025)
 CV_results_BA.quantile(0.975)
+CV_results_BA.to_csv("CV_results_BA_Paclitaxel_NeuropathyDay2_explanation_ML.csv")
 
 fig, ax = plt.subplots(figsize=(18, 16))
 sns.boxplot(ax=ax, data=CV_results_BA)
@@ -872,6 +873,7 @@ CV_results_ROC.std()
 CV_results_ROC.quantile()
 CV_results_ROC.quantile(0.025)
 CV_results_ROC.quantile(0.975)
+CV_results_ROC.to_csv("CV_results_ROC_Paclitaxel_NeuropathyDay2_explanation_ML.csv")
 
 fig, ax = plt.subplots(figsize=(18, 16))
 sns.boxplot(ax=ax, data=CV_results_ROC)
